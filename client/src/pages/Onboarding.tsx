@@ -1,57 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSocket } from '../contexts/SocketContext';
+import { useGame } from '../contexts/GameContext';
+import type { IResponse } from '../interfaces/socket-types';
 
 const Onboarding: React.FC = () => {
 	const [gameCode, setGameCode] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [socket, setSocket] = useState<Socket | null>(null);
+	const { socket } = useSocket();
+	const navigate = useNavigate();
+	const { setUsers } = useGame();
 
-	// Socket.IO configuration
+	// Handle join response
 	useEffect(() => {
-		const newSocket = io('http://localhost:3000/quiz-game', {
-			extraHeaders: {
-				authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYWVhOTRhZjk0MTM1MWIyZWQzMzkiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzQ4MzI0NjE2LCJleHAiOjE3NDg3NTY2MTZ9.Ukkkt2_WATP4yC42-TytvpNYwMbrQi7D8MfVOFBJM9w`,
-			},
-		});
-		setSocket(newSocket);
-
-		// Handle connection events
-		newSocket.on('connect', () => {
-			console.log('Socket Connected');
-		});
-
-		newSocket.on('disconnect', () => {
-			console.log('Socket Disconnected');
-		});
-
-		// Handle error
-		newSocket.on('error', (error: any) => {
-			console.error('Socket Error:', error);
-		});
-
-		// Handle join response
-		newSocket.on('quiz.join.response', (response: any) => {
-			if (response.success) {
-				window.location.href = `/game/${gameCode}`;
-			} else {
-				setError(response.message);
-			}
-			setIsLoading(false);
-		});
+		if (socket) {
+			socket.on('quiz.join.response', (response: IResponse) => {
+				console.log(response);
+				
+				if(response.status) {
+					// Save users to state and navigate to game page
+					setUsers(response.activeUsers);
+					navigate(`/game/${gameCode}`);
+				}
+			});
+		}
 
 		return () => {
-			newSocket.disconnect();
+			if (socket) {
+				socket.off('quiz.join.response');
+			}
 		};
-	}, []);
+	}, [socket, gameCode]);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!gameCode) return;
-		console.log(gameCode);
+		toast.info('Joining game: ' + gameCode);
 
-		setIsLoading(true);
-		setError(null);
 
 		// Send game code to server
 		if (socket) {
@@ -62,50 +47,52 @@ const Onboarding: React.FC = () => {
 	};
 
 	return (
-		<div className='min-h-screen bg-gray-100 flex items-center justify-center'>
-			<div className='bg-white p-8 rounded-lg shadow-md w-96'>
-				<h1 className='text-2xl font-bold mb-6 text-center'>
-					Join Game
-				</h1>
-				<form onSubmit={handleSubmit} className='space-y-4'>
-					<div>
-						<label
-							htmlFor='gameCode'
-							className='block text-sm font-medium text-gray-700 mb-1'
-						>
-							Game Code
-						</label>
-						<input
-							type='text'
-							id='gameCode'
-							value={gameCode}
-							onChange={(e) =>
-								setGameCode(e.target.value)
-							}
-							className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-							placeholder='Enter game code'
-							required
-						/>
+		<div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col">
+			<nav className="nav-tabs bg-white shadow-sm">
+				<Link to="/" className="nav-tab">Home</Link>
+				<Link to="/onboarding" className="nav-tab active">Onboarding</Link>
+			</nav>
+			
+			<div className="flex-1 flex items-center justify-center p-8">
+				<div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+					<div className="text-center mb-8">
+						<h1 className="text-3xl font-bold text-gray-800 mb-2">Join Quiz Game</h1>
+						<p className="text-gray-500">Enter your game code to start playing</p>
 					</div>
 
-					{error && (
-						<div className='text-red-500 text-sm'>
-							{error}
+					<form onSubmit={handleSubmit} className="space-y-6">
+						<div>
+							<label htmlFor="gameCode" className="block text-sm font-medium text-gray-700 mb-2">
+								Game Code
+							</label>
+							<div className="relative">
+								<input
+									type="text"
+									id="gameCode"
+									value={gameCode}
+									onChange={(e) => setGameCode(e.target.value)}
+									placeholder="Enter game code"
+									required
+									className={`w-full px-4 py-3 rounded-lg border ${
+										true ? 'bg-gray-100' : 'bg-white'
+									} border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+								/>
+								
+							</div>
 						</div>
-					)}
 
-					<button
-						type='submit'
-						disabled={isLoading || !gameCode}
-						className={`w-full py-2 px-4 rounded-md font-medium ${
-							isLoading || !gameCode
-								? 'bg-gray-300 cursor-not-allowed'
-								: 'bg-blue-500 hover:bg-blue-600 text-white'
-						}`}
-					>
-						{isLoading ? 'Joining...' : 'Join Game'}
+						<button
+							type="submit"
+							className={`w-full flex items-center justify-center px-6 py-3 rounded-lg font-medium text-lg transition-all duration-200 ${
+								false
+									? 'bg-gray-300 cursor-not-allowed'
+									: 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+							}`}
+						>
+						<span>Join Game</span>
 					</button>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	);
