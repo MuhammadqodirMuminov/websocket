@@ -3,12 +3,12 @@ import AppRouter from './router';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SocketProvider } from './contexts/SocketContext';
-import { GameProvider } from './contexts/GameContext';
+import { GameContextProvider } from './contexts/GameContext';
 
 const App: React.FC = () => {
   return (
     <SocketProvider>
-      <GameProvider>
+      <GameContextProvider>
         <AppRouter />
         <ToastContainer
           position="top-right"
@@ -21,7 +21,7 @@ const App: React.FC = () => {
           draggable
           pauseOnHover
         />
-      </GameProvider>
+      </GameContextProvider>
     </SocketProvider>
   );
 };

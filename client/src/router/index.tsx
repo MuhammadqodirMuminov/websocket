@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from '../pages/Home';
 import Onboarding from '../pages/Onboarding';
 import Game from '../pages/Game';
+import GameQuiz from '../pages/GameQuiz';
+import Host from '../pages/Host';
 
 const router = createBrowserRouter([
 	{
@@ -13,8 +15,16 @@ const router = createBrowserRouter([
 		element: <Onboarding />,
 	},
 	{
-		path: '/game/:gameCode',
+		path: '/game/:sessionId',
 		element: <Game />,
+	},
+	{
+		path: '/game-quiz/:sessionId',
+		element: <GameQuiz />,
+	},
+	{
+		path: '/host/:sessionId',
+		element: <Host />,
 	},
 ]);
 
