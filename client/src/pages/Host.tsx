@@ -6,13 +6,13 @@ import type { ITeamResponse } from '../interfaces/socket-types';
 
 const Host: React.FC = () => {
 	const { sessionId } = useParams();
-	const { team, gameSession, allTeams, setAllTeams } = useGame();
+	const { gameSession, allTeams, setAllTeams } = useGame();
 	const { socket } = useSocket();
-	console.log(gameSession);
+
 
 	React.useEffect(() => {
 		if (socket) {
-			socket.on('team.create.response', (data: ITeamResponse) => {
+			socket.on('team.create.update', (data: ITeamResponse) => {
 				if (data.status) {
 					setAllTeams(data.allTeams);
 				}
@@ -21,12 +21,11 @@ const Host: React.FC = () => {
 
 		return () => {
 			if (socket) {
-				socket.off('team.create.response');
+				socket.off('team.create.update');
 			}
 		};
-  }, [socket, gameSession, setAllTeams, allTeams]);
-  console.log(allTeams, "at host page");
-  
+	}, [socket, gameSession, setAllTeams, allTeams]);
+
 
 	const startGame = () => {
 		if (socket) {

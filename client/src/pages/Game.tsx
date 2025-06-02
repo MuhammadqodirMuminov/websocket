@@ -25,7 +25,6 @@ const Game: React.FC = () => {
 			socket.on(
 				'team.create.response',
 				(response: ITeamResponse) => {
-					console.log(response);
 					if (response.status) {
 						setTeam(response.team);
 						navigate(`/game-quiz/${sessionId}`);
@@ -77,8 +76,6 @@ const Game: React.FC = () => {
 								members: [...members],
 							};
 							if (socket) {
-								console.log(sessionId);
-
 								socket.emit('team.create', {
 									sessionId: sessionId,
 									...newTeam,

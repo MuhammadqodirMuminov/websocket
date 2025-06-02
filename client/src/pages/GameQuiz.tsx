@@ -31,30 +31,25 @@ const GameQuiz: React.FC = () => {
 	const { team, allTeams, setAllTeams } = useGame();
 	const { socket } = useSocket();
 
-	console.log(allTeams, team);
 
 	// here please listem tea, create response
 	useEffect(() => {
-		console.log(socket);
-
 		if (socket) {
-			socket.on('team.create.response', (response: any) => {
-				console.log(response);
-
+			socket.on('team.create.update', (response: any) => {
 				if (response.status) {
-					// Save users to state and navigate to game page
 					setAllTeams(response.allTeams);
-					console.log(response.allTeams.length);
 				}
 			});
 		}
+		console.log({allTeams});
 
 		return () => {
 			if (socket) {
-				socket.off('team.create.response');
+				socket.off('team.create.update');
 			}
 		};
 	}, [socket, setAllTeams, allTeams]);
+	
 	return (
 		<div className='min-h-screen bg-gray-100 p-4'>
 			<div className='max-w-4xl mx-auto bg-white rounded-lg shadow p-6'>
