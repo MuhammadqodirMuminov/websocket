@@ -4,6 +4,7 @@ import Onboarding from '../pages/Onboarding';
 import Game from '../pages/Game';
 import GameQuiz from '../pages/GameQuiz';
 import Host from '../pages/Host';
+import Question from '../pages/question';
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 	{
 		path: '/host/:sessionId',
 		element: <Host />,
+	},
+	{
+		path: '/question/:sessionId',
+		element: <Question />,
 	},
 ]);
 

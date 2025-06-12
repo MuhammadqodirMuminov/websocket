@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 import { useSocket } from '../contexts/SocketContext';
+import type { StartQuizResponse } from '../interfaces/quiz-type';
 
 type TeamMember = {
 	name: string;
@@ -28,11 +29,9 @@ interface Team {
 const GameQuiz: React.FC = () => {
 	const { sessionId } = useParams();
 	const navigate = useNavigate();
-	const { team, allTeams, setAllTeams } = useGame();
+	const { team, allTeams, setAllTeams, setCurrentQuestion } = useGame();
 	const { socket } = useSocket();
 
-
-	// here please listem tea, create response
 	useEffect(() => {
 		if (socket) {
 			socket.on('team.create.update', (response: any) => {
@@ -40,16 +39,22 @@ const GameQuiz: React.FC = () => {
 					setAllTeams(response.allTeams);
 				}
 			});
+
+			socket.on('start-quiz.response', (data: StartQuizResponse) => {
+				console.log(data);
+				setCurrentQuestion(data.question);
+				navigate(`/question/${data.sessionId}`);
+			});
 		}
-		console.log({allTeams});
 
 		return () => {
 			if (socket) {
 				socket.off('team.create.update');
+				socket.off('start-quiz.response');
 			}
 		};
-	}, [socket, setAllTeams, allTeams]);
-	
+	}, [socket, setAllTeams, setCurrentQuestion]);
+
 	return (
 		<div className='min-h-screen bg-gray-100 p-4'>
 			<div className='max-w-4xl mx-auto bg-white rounded-lg shadow p-6'>

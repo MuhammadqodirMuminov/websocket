@@ -29,8 +29,9 @@ const Host: React.FC = () => {
 
 	const startGame = () => {
 		if (socket) {
-			socket.emit('quiz.start', {
-				code: sessionId,
+			socket.emit('start-quiz', {
+				sessionId,
+				lang: 'EN',
 			});
 		}
 	};

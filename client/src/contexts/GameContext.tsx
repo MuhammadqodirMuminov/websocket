@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import type { Question } from '../interfaces/quiz-type';
 
 export interface TeamMember {
 	name: string;
@@ -37,6 +38,8 @@ interface GameContextType {
 	setAllTeams: (teams: Team[]) => void;
 	gameSession: GameSession | null;
 	setGameSession: (session: GameSession | null) => void;
+	currentQuestion: Question | null;
+	setCurrentQuestion: (question: Question | null) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -48,9 +51,10 @@ export const GameContextProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [team, setTeam] = useState<Team | null>(null);
 	const [allTeams, setAllTeams] = useState<Team[]>([]);
 	const [gameSession, setGameSession] = useState<GameSession | null>(null);
+	const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
 
 	return (
-		<GameContext.Provider value={{ users, setUsers, team, setTeam, allTeams, setAllTeams, gameSession, setGameSession }}>
+		<GameContext.Provider value={{ users, setUsers, team, setTeam, allTeams, setAllTeams, gameSession, setGameSession, currentQuestion, setCurrentQuestion }}>
 			{children}
 		</GameContext.Provider>
 	);
