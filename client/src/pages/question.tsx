@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSocket } from '../contexts/SocketContext';
 import { useGame } from '../contexts/GameContext';
 import QuestionResult from '../components/QuestionResult';
@@ -19,7 +19,6 @@ const Question = () => {
     const { socket } = useSocket();
     const { sessionId } = useParams();
     const { users, currentQuestion } = useGame();
-    const navigate = useNavigate();
 
     const [showResult, setShowResult] = useState(false);
     const [resultData, setResultData] = useState<QuestionResultData | null>(null);

@@ -3,12 +3,14 @@ import { useParams } from 'react-router-dom';
 import { useGame } from '../contexts/GameContext';
 import { useSocket } from '../contexts/SocketContext';
 import type { ITeamResponse } from '../interfaces/socket-types';
+import type { StartQuizResponse } from '../interfaces/quiz-type';
+import { useNavigate } from 'react-router-dom';
 
 const Host: React.FC = () => {
 	const { sessionId } = useParams();
-	const { gameSession, allTeams, setAllTeams } = useGame();
+	const { gameSession, allTeams, setAllTeams, setCurrentQuestion } = useGame();
 	const { socket } = useSocket();
-
+	const navigate = useNavigate();
 
 	React.useEffect(() => {
 		if (socket) {
@@ -17,15 +19,23 @@ const Host: React.FC = () => {
 					setAllTeams(data.allTeams);
 				}
 			});
+
+			socket.on(
+				'start-quiz.response',
+				(data: StartQuizResponse) => {
+					setCurrentQuestion(data.question);
+					navigate(`/host-question/${sessionId}`);
+				},
+			);
 		}
 
 		return () => {
 			if (socket) {
 				socket.off('team.create.update');
+				socket.off('start-quiz.response');
 			}
 		};
-	}, [socket, gameSession, setAllTeams, allTeams]);
-
+	}, [socket, gameSession, setAllTeams, allTeams, setCurrentQuestion]);
 
 	const startGame = () => {
 		if (socket) {

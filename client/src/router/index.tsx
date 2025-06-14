@@ -5,6 +5,7 @@ import Game from '../pages/Game';
 import GameQuiz from '../pages/GameQuiz';
 import Host from '../pages/Host';
 import Question from '../pages/question';
+import HostQuestion from '../pages/HostQuestion';
 
 const router = createBrowserRouter([
 	{
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
 	{
 		path: '/question/:sessionId',
 		element: <Question />,
+	},
+	{
+		path: '/host-question/:sessionId',
+		element: <HostQuestion />,
 	},
 ]);
 

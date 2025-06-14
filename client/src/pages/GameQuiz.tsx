@@ -4,28 +4,6 @@ import { useGame } from '../contexts/GameContext';
 import { useSocket } from '../contexts/SocketContext';
 import type { StartQuizResponse } from '../interfaces/quiz-type';
 
-type TeamMember = {
-	name: string;
-	_id: string;
-};
-
-type TeamHost = {
-	_id: string;
-	first_name: string;
-	last_name: string;
-};
-
-interface Team {
-	_id?: string;
-	name: string;
-	gameSession?: string;
-	members: TeamMember[];
-	isActive?: boolean;
-	teamHost?: TeamHost;
-	createdAt?: string;
-	updatedAt?: string;
-}
-
 const GameQuiz: React.FC = () => {
 	const { sessionId } = useParams();
 	const navigate = useNavigate();
@@ -40,11 +18,13 @@ const GameQuiz: React.FC = () => {
 				}
 			});
 
-			socket.on('start-quiz.response', (data: StartQuizResponse) => {
-				console.log(data);
-				setCurrentQuestion(data.question);
-				navigate(`/question/${data.sessionId}`);
-			});
+			socket.on(
+				'start-quiz.response',
+				(data: StartQuizResponse) => {
+					setCurrentQuestion(data.question);
+					navigate(`/question/${data.sessionId}`);
+				},
+			);
 		}
 
 		return () => {
