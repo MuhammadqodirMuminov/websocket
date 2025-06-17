@@ -16,10 +16,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
 
   const connect = () => {
-    const newSocket = io('http://192.168.1.3:3000/quiz-game', {
-      extraHeaders: {
-        authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
+    const newSocket = io('http://192.168.0.109:3000/quiz-game', {
+		extraHeaders: {
+			authorization: `Bearer ${localStorage.getItem('token')}`,
+		},
     });
 
     setSocket(newSocket);
