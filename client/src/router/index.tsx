@@ -1,40 +1,25 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from '../pages/Home';
-import Onboarding from '../pages/Onboarding';
-import Game from '../pages/Game';
-import GameQuiz from '../pages/GameQuiz';
-import Host from '../pages/Host';
-import Question from '../pages/question';
-import HostQuestion from '../pages/HostQuestion';
+import Lobby from '../pages/Host/Lobby/Lobby';
+import JoinGame from '../pages/JoinGame/JoinGame';
+import ShowQuiz from '../pages/QuizDetail/QuizDetail';
+import AllQuizzes from '../pages/Quizzess/AllQuizzes';
 
 const router = createBrowserRouter([
 	{
-		path: '/home',
-		element: <Home />,
-	},
-	{
 		path: '/',
-		element: <Onboarding />,
+		element: <JoinGame />,
 	},
 	{
-		path: '/game/:sessionId',
-		element: <Game />,
+		path: '/quizzes',
+		element: <AllQuizzes />,
 	},
 	{
-		path: '/game-quiz/:sessionId',
-		element: <GameQuiz />,
+		path: '/quizzes/:quizId',
+		element: <ShowQuiz />,
 	},
 	{
-		path: '/host/:sessionId',
-		element: <Host />,
-	},
-	{
-		path: '/question/:sessionId',
-		element: <Question />,
-	},
-	{
-		path: '/host-question/:sessionId',
-		element: <HostQuestion />,
+		path: '/lobby',
+		element: <Lobby />,
 	},
 ]);
 
