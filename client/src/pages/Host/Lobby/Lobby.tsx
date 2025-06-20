@@ -9,7 +9,13 @@ import styles from './Lobby.module.scss';
 
 interface Player {
 	_id: string;
-	nickname: string;
+	username: string;
+	score: number;
+	user: {
+		_id: string;
+		first_name: string;
+		last_name: string;
+	};
 }
 
 interface LobbyState {
@@ -52,6 +58,7 @@ const Lobby: React.FC = () => {
 			players: Player[];
 			playersCount: number;
 		}) => {
+			console.log('event: UPDATE_PLAYERS_IN_LOBBY', playersData);
 			if (playersData.playersCount === 0) {
 				setState((prev) => ({
 					...prev,
@@ -209,7 +216,7 @@ const Players: React.FC<PlayersProps> = ({ players, playersCount }) => {
 	}
 
 	const playerNames = players.map((p) => (
-		<div key={p._id}>{p.nickname}</div>
+		<div key={p._id}>{p.user.first_name + ' ' + p.user.last_name}</div>
 	));
 
 	return <div className={styles.names}>{playerNames}</div>;

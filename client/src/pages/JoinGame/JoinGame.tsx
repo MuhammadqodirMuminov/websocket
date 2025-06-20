@@ -14,7 +14,7 @@ import { useSocket } from '../../contexts/SocketContext';
 import styles from './JoinGame.module.scss';
 
 interface PlayerJoinedData {
-	nickname: string;
+	username: string;
 	pin: number;
 }
 
@@ -79,7 +79,7 @@ const JoinGame: React.FC = () => {
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
 		const { name, value } = event.target;
-		if (name === 'nickname') {
+		if (name === 'username') {
 			setNickname(value);
 		} else if (name === 'pin') {
 			setPin(value);
@@ -100,7 +100,6 @@ const JoinGame: React.FC = () => {
 		// Use the socket from the top-level hook call
 		if (socket) {
 			socket.emit('PLAYER_JOINED', {
-				nickname: nickname,
 				pin: parseInt(pin),
 			});
 		}
@@ -127,7 +126,10 @@ const JoinGame: React.FC = () => {
 		const handlePlayerJoinedSuccessfully = (
 			data: PlayerJoinedData,
 		): void => {
-			navigate(`/instructions?nickname=${nickname}&pin=${pin}`);
+			console.log('event: PLAYER_JOINED_SUCCESSFULLY', data);
+			navigate(
+				`/instructions?username=${data.username}&pin=${data.pin}`,
+			);
 		};
 
 		// Set up event listeners
@@ -181,15 +183,6 @@ const JoinGame: React.FC = () => {
 				</div>
 				<div className={styles.verticalMainForm}>
 					<form onSubmit={handleSubmit}>
-						<JoinGameInput
-							placeholder='NICKNAME'
-							name='nickname'
-							value={nickname}
-							onChange={handleChange}
-							margin='dense'
-							required
-							fullWidth
-						/>
 						<JoinGameInput
 							placeholder='GAME PIN'
 							name='pin'

@@ -3,6 +3,7 @@ import Lobby from '../pages/Host/Lobby/Lobby';
 import JoinGame from '../pages/JoinGame/JoinGame';
 import ShowQuiz from '../pages/QuizDetail/QuizDetail';
 import AllQuizzes from '../pages/Quizzess/AllQuizzes';
+import Instructions from '../pages/Player/Instructions/Instructions';
 
 const router = createBrowserRouter([
 	{
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
 	{
 		path: '/lobby',
 		element: <Lobby />,
+	},
+	{
+		path: '/instructions',
+		element: <Instructions />,
 	},
 ]);
 

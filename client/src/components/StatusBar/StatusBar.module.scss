@@ -1,0 +1,31 @@
+@import '../../styles/fonts';
+
+.status {
+  font-size: 2rem;
+  padding: 16px;
+  font-family: $primary-font;
+  font-weight: 800;
+  border-bottom: 0.3rem solid rgba(0, 0, 0, 0.15);
+
+  .left {
+    display: flex;
+
+    div {
+      margin-right: 1em;
+    }
+  }
+}
+
+.status > div {
+  min-width: 10rem;
+}
+
+@media only screen and (max-width: 420px) {
+  .status {
+    font-size: 1.4rem;
+  }
+
+  .status > div {
+    min-width: 8rem;
+  }
+}

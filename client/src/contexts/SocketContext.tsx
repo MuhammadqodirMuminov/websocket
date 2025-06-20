@@ -18,7 +18,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [isConnected, setIsConnected] = useState(false);
 
 	const connect = () => {
-		const newSocket = io('http://192.168.1.45:3000/quiz-game', {
+		const newSocket = io('http://localhost:3000/quiz-game', {
 			extraHeaders: {
 				authorization: `Bearer ${localStorage.getItem(
 					'token',
